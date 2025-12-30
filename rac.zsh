@@ -1,5 +1,5 @@
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
-export RAC_DEBUG=false
+export RAC_DEBUG=false # TODO: Delete export
 
 _debug() {
   [[ "$RAC_DEBUG" = true ]] || return 0
@@ -11,74 +11,97 @@ _err() {
 }
 
 _compile_plugin() {
+  local dir="${1:-.}"
+  cd "$dir" || return 1
   zcompile -U **/*.(zsh|sh|plugin.zsh|zsh-theme|zshplugin|zsh.plugin)(.N) 2>/dev/null
 }
 
-_path-contains() {
-  setopt localoptions nonomatch nocshnullglob nonullglob;
-  [ -e "$1"/*"$2"(.,@[1]) ]
+_path_contains() {
+  setopt localoptions nonomatch nocaseglob nullglob
+  [[ -n ${(M)${1}/*${2}(N)} ]]
 }
 
 _install_pkg() {
   local pkg="$1"
   local dir="$2"
-  _debug "Installing $pkg..."
-  git clone --depth 1 --single-branch "https://github.com/$pkg.git" "$dir"
-  _compile_plugin $dir
-  # TODO: Add not only github urls
+  _debug "Installing $pkg to $dir..."
+  mkdir -p "$(dirname "$dir")"
+  git clone --depth 1 --single-branch "https://github.com/$pkg.git" "$dir" || {
+    _err "Failed to clone $pkg"
+    return 1
+  }
+  _compile_plugin "$dir"
 }
 
 _load_pkg() {
   local pkg="$1"
-  local dir="$RAC_CACHE/${pkg##*/}"
-  local plugin_name=${pkg%/*}
-  [[ ! -d $dir ]] && _install_pkg $pkg $dir
+  local repo_name="${pkg##*/}"
+  local dir="$RAC_CACHE/$repo_name"
+  
+  [[ ! -d "$dir" ]] && _install_pkg "$pkg" "$dir"
 
-  _debug "Loading $plugin_name..."
-  if [[ -f "${plugin_name}" ]]; then
-    source "${plugin_name}"
-  elif [[ -f "${plugin_name}/init.zsh" ]]; then
-    source "${plugin_name}/init.zsh"
-  elif [[ -f "${plugin_name}.zsh-theme" ]]; then
-    source "${plugin_name}.zsh-theme"
-  elif [[ -f "${plugin_name}.theme.zsh" ]]; then
-    source "${plugin_name}.theme.zsh"
-  elif [[ -f "${plugin_name}.zshplugin" ]]; then
-    source "${plugin_name}.zshplugin"
-  elif [[ -f "${plugin_name}.zsh.plugin" ]]; then
-    source "${plugin_name}.zsh.plugin"
-  elif _path-contains "${plugin_name}" ".plugin.zsh" ; then
-    for script (${plugin_name}/*\.plugin\.zsh(N)) source "${script}"
-  elif _path-contains "${plugin_name}" ".zsh" ; then
-    for script (${plugin_name}/*\.zsh(N)) source "${script}"
-  elif _path-contains "${plugin_name}" ".sh" ; then
-    for script (${plugin_name}/*\.sh(N)) source "${script}"
-  else
-    if [[ -d ${dir:-$plugin_name} ]]; then
-      _err "Failed to load ${dir:-$plugin_name}"
-    else
-      _err "Failed to load ${dir:-$plugin_name}"
+  _debug "Loading $repo_name from $dir..."
+  
+  local plugin_files=(
+    "$dir/$repo_name.zsh"
+    "$dir/init.zsh"
+    "$dir/$repo_name.zsh-theme"
+    "$dir/$repo_name.theme.zsh"
+    "$dir/$repo_name.zshplugin"
+    "$dir/$repo_name.zsh.plugin"
+  )
+  
+  for file in "${plugin_files[@]}"; do
+    [[ -f "$file" ]] && { source "$file"; return 0; }
+  done
+  
+  local patterns=( ".plugin.zsh" ".zsh" ".sh" )
+  for pattern in "${patterns[@]}"; do
+    if _path_contains "$dir" "$pattern"; then
+      for script ($dir/*${pattern}(N)); do
+        _debug "Sourcing $script"
+        source "$script"
+      done
+      return 0
     fi
-  fi
+  done
+  
+  _err "Failed to load plugin: $repo_name"
+  return 1
 }
 
 rac() {
   local pkgs=("$@")
-  [[ $# -eq 0 ]] && { echo "Error: arguments required" >&2; return 1; }
-
+  [[ $# -eq 0 ]] && { 
+    _err "Error: arguments required"
+    echo "Usage: rac [options] package1 package2..."
+    echo "Options: --debug|-d, --help|-h"
+    return 1 
+  }
   while [[ $1 == --* ]]; do
     case $1 in
-      --debug|-d) $RAC_DEBUG=true; shift ;;
-      --help|-h) echo "TODO..."; return 0 ;;
-      *) echo "Unknown option: $1" >&2; return 1 ;;
+      # TODO: Fix --debug flag
+      --debug|-d) RAC_DEBUG=true; shift ;;
+      --help|-h) 
+        echo "rac - Rapid Antigen Cache: Fast Zsh plugin manager"
+        echo "Usage: rac [options] package1 package2..."
+        echo "Options:"
+        echo "  --debug, -d    Enable debug output"
+        echo "  --help, -h     Show this help"
+        echo "Examples:"
+        echo "  rac zsh-users/zsh-autosuggestions"
+        echo "  rac zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting"
+        return 0 ;;
+      *) _err "Unknown option: $1"; return 1 ;;
     esac
   done
-  pkgs=("$@")  # Rebuild pkgs after options
 
+  pkgs=("$@")
+  
+  _debug "Loading ${#pkgs[@]} packages..."
   for pkg in "${pkgs[@]}"; do
-    _load_pkg "$pkg" &
+    _load_pkg "$pkg"
   done
-  wait
 }
 
 # _install_rac() {
