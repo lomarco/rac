@@ -82,46 +82,33 @@ rac() {
     case $1 in
       --debug|-d) RAC_DEBUG=true; shift ;;
       --help|-h) 
-        echo "rac - Rapid Antigen Cache: Fast Zsh plugin manager"
         echo "Usage: rac [options] package1 package2..."
         echo "Options:"
         echo "  --debug, -d    Enable debug output"
         echo "  --help, -h     Show this help"
         echo "Examples:"
-        echo "  rac zsh-users/zsh-autosuggestions"
+        echo "  rac --debug zsh-users/zsh-autosuggestions"
         echo "  rac zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting"
         return 0 ;;
       --*) _err "Unknown option: $1"; return 1 ;;
       -*) _err "Unknown option: $1"; return 1 ;;
     esac
   done
-
-  pkgs=("$@")
   
+  pkgs=("$@")
+
+  [[ ${#pkgs[@]} -eq 0 ]] && {
+    _err "Error: packages required after flags"
+    echo "Usage: rac [options] package1 package2..."
+    return 1
+  }
+
   _debug "Loading ${#pkgs[@]} packages..."
   for pkg in "${pkgs[@]}"; do
     _load_pkg "$pkg"
   done
 }
 
-# _install_rac() {
-#   local pkgs=(
-#     "zsh-users/zsh-autosuggestions"
-#     "zdharma-continuum/fast-syntax-highlighting" 
-#     "romkatv/powerlevel10k"
-#   )
-#   
-#   for pkg in "${pkgs[@]}"; do
-#     local dir="$RAC_DIR/${pkg##*/}"
-#     [[ -d $dir/.git ]] && (cd $dir && git pull --ff-only --depth=1) || git clone --depth=1 --single-branch "https://github.com/$pkg.git" "$dir" &
-#   done
-#   wait && zcompile -U $RAC_DIR/**/*.zsh(N) $RAC_DIR/**/*.plugin.zsh(N) $RAC_DIR/**/*.zsh-theme(N)
-# }
-#
-# source $RAC_DIR/powerlevel10k/powerlevel10k.zsh-theme
-# source $RAC_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh
-# source $RAC_DIR/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-#
 # rac-update() {
 #   rm -rf ~/.cache/rac/ && _install_rac
 # }
