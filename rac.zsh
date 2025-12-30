@@ -71,16 +71,15 @@ _load_pkg() {
 }
 
 rac() {
-  local pkgs=("$@")
+  local pkgs=()
   [[ $# -eq 0 ]] && { 
     _err "Error: arguments required"
     echo "Usage: rac [options] package1 package2..."
     echo "Options: --debug|-d, --help|-h"
     return 1 
   }
-  while [[ $1 == --* ]]; do
+  while [[ $# -gt 0 && $1 =~ ^- ]]; do
     case $1 in
-      # TODO: Fix --debug flag
       --debug|-d) RAC_DEBUG=true; shift ;;
       --help|-h) 
         echo "rac - Rapid Antigen Cache: Fast Zsh plugin manager"
@@ -92,7 +91,8 @@ rac() {
         echo "  rac zsh-users/zsh-autosuggestions"
         echo "  rac zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting"
         return 0 ;;
-      *) _err "Unknown option: $1"; return 1 ;;
+      --*) _err "Unknown option: $1"; return 1 ;;
+      -*) _err "Unknown option: $1"; return 1 ;;
     esac
   done
 
