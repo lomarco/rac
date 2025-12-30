@@ -1,5 +1,5 @@
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
-export RAC_DEBUG=false # TODO: Delete export
+RAC_DEBUG=false
 
 _debug() {
   [[ "$RAC_DEBUG" = true ]] || return 0
