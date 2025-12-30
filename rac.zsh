@@ -82,6 +82,7 @@ rac() {
     case $1 in
       --debug|-d) RAC_DEBUG=true; shift ;;
       --help|-h) 
+        echo "rac - rapidus addon curator"
         echo "Usage: rac [options] package1 package2..."
         echo "Options:"
         echo "  --debug, -d    Enable debug output"
