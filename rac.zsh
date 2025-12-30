@@ -12,8 +12,7 @@ _err() {
 
 _compile_plugin() {
   local dir="${1:-.}"
-  cd "$dir" || return 1
-  zcompile -U **/*.(zsh|sh|plugin.zsh|zsh-theme|zshplugin|zsh.plugin)(.N) 2>/dev/null
+  zcompile -U "${PWD%/}/$dir"/**/*.(zsh|sh|plugin.zsh|zsh-theme|zshplugin|zsh.plugin)(.N) 2>/dev/null
 }
 
 _path_contains() {
