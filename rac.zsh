@@ -1,3 +1,5 @@
+#!/bin/env zsh
+
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
 RAC_DEBUG=false
 
