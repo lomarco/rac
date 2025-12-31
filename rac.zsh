@@ -1,5 +1,4 @@
 #!/bin/env zsh
-setopt KSH_ARRAYS
 
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
 RAC_DEBUG=false
@@ -98,11 +97,11 @@ rac() {
     return 1 
   }
   
-  local i=0
+  local i=1
   local new_pkgs=()
   local commands=()
 
-  while [[ $i -lt ${#pkgs[@]} ]]; do
+  while [[ $i -le ${#pkgs[@]} ]]; do
     case "${pkgs[$i]}" in
       load|update|update-all)
         command="${pkgs[$i]}"
