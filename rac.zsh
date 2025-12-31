@@ -42,8 +42,6 @@ _load_pkg() {
   
   [[ ! -d "$dir" ]] && _install_pkg "$pkg" "$dir"
 
-  _debug "Loading $repo_name from $dir..."
-  
   local plugin_files=(
     "$dir/$repo_name.zsh"
     "$dir/init.zsh"
@@ -54,14 +52,14 @@ _load_pkg() {
   )
   
   for file in "${plugin_files[@]}"; do
-    [[ -f "$file" ]] && { source "$file"; return 0; }
+    [[ -f "$file" ]] && { _debug "Sourcing $file"; source "$file"; return 0; }
   done
   
   local patterns=( ".plugin.zsh" ".zsh" ".sh" )
   for pattern in "${patterns[@]}"; do
     if _path_contains "$dir" "$pattern"; then
       for script ($dir/*${pattern}(N)); do
-        _debug "Sourcing $script"
+        _debug "Fallback sourcing $script"
         source "$script"
       done
       return 0
