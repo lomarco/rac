@@ -49,6 +49,9 @@ _load_pkg() {
     "$dir/$repo_name.theme.zsh"
     "$dir/$repo_name.zshplugin"
     "$dir/$repo_name.zsh.plugin"
+    "$dir/$repo_name.plugin.zsh"
+    "$dir/zsh-$repo_name.plugin.zsh"
+    "$dir/$repo_name/$repo_name.plugin.zsh"
   )
   
   for file in "${plugin_files[@]}"; do
