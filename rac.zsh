@@ -43,15 +43,15 @@ _load_pkg() {
   [[ ! -d "$dir" ]] && _install_pkg "$pkg" "$dir"
 
   local plugin_files=(
+    "$dir/$repo_name.plugin.zsh"
     "$dir/$repo_name.zsh"
     "$dir/init.zsh"
     "$dir/$repo_name.zsh-theme"
-    "$dir/$repo_name.theme.zsh"
-    "$dir/$repo_name.zshplugin"
-    "$dir/$repo_name.zsh.plugin"
-    "$dir/$repo_name.plugin.zsh"
     "$dir/zsh-$repo_name.plugin.zsh"
+    "$dir/$repo_name.theme.zsh"
+    "$dir/$repo_name.zsh.plugin"
     "$dir/$repo_name/$repo_name.plugin.zsh"
+    "$dir/$repo_name.plugin.zsh"
   )
   
   for file in "${plugin_files[@]}"; do
