@@ -81,11 +81,11 @@ _rac_load() {
 }
 
 _rac_update() {
-  ;
+  # TODO: Implement rac update command
 }
 
 _rac_updateall() {
-  ;
+  # TODO: Implement rac updateall command
 }
 
 rac() {
