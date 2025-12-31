@@ -1,4 +1,5 @@
 #!/bin/env zsh
+setopt KSH_ARRAYS
 
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
 RAC_DEBUG=false
@@ -72,41 +73,65 @@ _load_pkg() {
 }
 
 rac() {
-  local pkgs=()
+  local pkgs=("$@")
   [[ $# -eq 0 ]] && { 
     _err "Error: arguments required"
     echo "Usage: rac [options] package1 package2..."
     echo "Options: --debug|-d, --help|-h"
     return 1 
   }
-  while [[ $# -gt 0 && $1 =~ ^- ]]; do
-    case $1 in
-      --debug|-d) RAC_DEBUG=true; shift ;;
-      --help|-h) 
+  
+  local i=0
+  local new_pkgs=()
+  local commands=()
+
+  while [[ $i -lt ${#pkgs[@]} ]]; do
+    case "${pkgs[$i]}" in
+      load|update|update-all)
+        command="${pkgs[$i]}"
+        ((i++))
+        ;;
+      --debug|-d)
+        RAC_DEBUG=true
+        ((i++))
+        ;;
+      --help|-h)
         echo "rac - rapidus addon curator"
         echo "Usage: rac [options] package1 package2..."
         echo "Options:"
         echo "  --debug, -d    Enable debug output"
         echo "  --help, -h     Show this help"
         echo "Examples:"
-        echo "  rac --debug zsh-users/zsh-autosuggestions"
-        echo "  rac zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting"
-        return 0 ;;
-      --*) _err "Unknown option: $1"; return 1 ;;
-      -*) _err "Unknown option: $1"; return 1 ;;
+        echo "  rac load zsh-users/zsh-autosuggestions"
+        echo "  rac update --debug zdharma-continuum/fast-syntax-highlighting"
+        echo "  rac update-all"
+        echo "  rac --debug zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting"
+        return 0
+        ;;
+      --*|-*)
+        _err "Unknown option: ${pkgs[$i]}"
+        return 1
+        ;;
+      *)
+        new_pkgs+=("${pkgs[$i]}")
+        ((i++))
+        ;;
     esac
   done
   
-  pkgs=("$@")
-
-  [[ ${#pkgs[@]} -eq 0 ]] && {
-    _err "Error: packages required after flags"
-    echo "Usage: rac [options] package1 package2..."
+  pkgs=("${new_pkgs[@]}")
+  
+  [[ -z "$command" ]] && {
+    _err "Error: command required (load, update, update-all)"
+    echo "Usage: rac <command> [flags] [packages...]"
+    echo "Try 'rac --help' for more information"
     return 1
   }
-
-  _debug "Loading ${#pkgs[@]} packages..."
-  for pkg in "${pkgs[@]}"; do
-    _load_pkg "$pkg"
-  done
+  
+  _debug "Start $command..."
+  case "$command" in
+    load) _rac_load ${pkgs[@]};;
+    update) _rac_update "${pkgs[@]}";;
+    update-all) _rac_updateall "${pkgs[@]}";;
+  esac
 }
