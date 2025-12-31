@@ -144,14 +144,14 @@ rac() {
   done
   
   pkgs=("${new_pkgs[@]}")
-  
+
   [[ -z "$command" ]] && {
     _err "Error: command required (load, update, update-all)"
     echo "Usage: rac <command> [flags] [packages...]"
     echo "Try 'rac --help' for more information"
     return 1
   }
-  
+
   _debug "Start $command..."
   case "$command" in
     load) _rac_load ${pkgs[@]};;
