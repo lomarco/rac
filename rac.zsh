@@ -72,6 +72,22 @@ _load_pkg() {
   return 1
 }
 
+_rac_load() {
+  local pkgs=("$@")
+  _debug "Packages: (${#pkgs[@]}): ${pkgs[@]}"
+  for pkg in "${pkgs[@]}"; do
+    _load_pkg "$pkg"
+  done
+}
+
+_rac_update() {
+  ;
+}
+
+_rac_updateall() {
+  ;
+}
+
 rac() {
   local pkgs=("$@")
   [[ $# -eq 0 ]] && { 
@@ -97,10 +113,18 @@ rac() {
         ;;
       --help|-h)
         echo "rac - rapidus addon curator"
-        echo "Usage: rac [options] package1 package2..."
-        echo "Options:"
-        echo "  --debug, -d    Enable debug output"
-        echo "  --help, -h     Show this help"
+        echo ""
+        echo "Usage: rac <command> [flags] [options] [packages...]"
+        echo ""
+        echo "Commands:"
+        echo "  load             Load plugin"
+        echo "  update           Update plugin"
+        echo "  update-all       Update all plugins"
+        echo ""
+        echo "Flags:"
+        echo "  --debug, -d      Enable debug output"
+        echo "  --help, -h       Show this help"
+        echo ""
         echo "Examples:"
         echo "  rac load zsh-users/zsh-autosuggestions"
         echo "  rac update --debug zdharma-continuum/fast-syntax-highlighting"
