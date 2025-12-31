@@ -110,7 +110,3 @@ rac() {
     _load_pkg "$pkg"
   done
 }
-
-# rac-update() {
-#   rm -rf ~/.cache/rac/ && _install_rac
-# }
