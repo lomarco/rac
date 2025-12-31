@@ -5,8 +5,8 @@ Rac:
 ``` bash
 $ hyperfine -N -w 10 -r 50 "zsh -i -c exit"
 Benchmark 1: zsh -i -c exit
-  Time (mean ± σ):      70.5 ms ±   4.9 ms    [User: 41.6 ms, System: 29.0 ms]
-  Range (min … max):    63.3 ms …  93.6 ms    50 runs
+  Time (mean ± σ):      67.8 ms ±   6.3 ms    [User: 40.1 ms, System: 27.0 ms]
+  Range (min … max):    59.8 ms …  85.8 ms    50 runs
 ```
 
 Zinit turbo:
