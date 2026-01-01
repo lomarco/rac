@@ -113,7 +113,7 @@ rac() {
       --help|-h)
         echo "rac - rapidus addon curator"
         echo ""
-        echo "Usage: rac <command> [flags] [options] [packages...]"
+        echo "Usage: rac <command> [flags] [options]"
         echo ""
         echo "Commands:"
         echo "  load             Load plugin"
