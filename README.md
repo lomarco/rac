@@ -8,13 +8,6 @@ Most Zsh plugin managers are bloated. They try to do too much - dependency graph
 The reality is, most users never use even 80% of these features.
 `rac` is deliberately minimal. All it does is **download plugins** and **update plugins**.
 
-## Why rac
-
-- **Minimal footprint** - a single portable script. No external dependencies except `git` and native `zsh`.
-- **Predictable behavior** - you always know what is being sourced, and from where.
-- **No lock-in** - plugins are simply git repositories cloned locally. You can delete or edit them at will.
-- **Transparent updates** - `git pull` for every repo, nothing more, nothing less.
-
 ## Installation
 
 Just put this in your `.zshrc` configuration:
@@ -31,6 +24,24 @@ source $RAC_HOME/rac.zsh
 ```bash
 rac load zsh-users/zsh-autosuggestions
 rac update
+```
+
+### Zshrc example
+```bash
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+RAC_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/rac"
+[[ -d $RAC_HOME ]] || git clone --depth 1 https://github.com/lomarco/rac.git $RAC_HOME \
+  zcompile -U $RAC_HOME/rac.zsh
+source $RAC_HOME/rac.zsh
+
+rac load "romkatv/powerlevel10k" \
+  "zsh-users/zsh-autosuggestions" \
+  "zdharma-continuum/fast-syntax-highlighting"
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 ```
 
 ## Benchmarks
