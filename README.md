@@ -51,10 +51,11 @@ rac load "romkatv/powerlevel10k" \
 | **rac**    | **67.8ms**   |
 | zinit-turbo| 74.5ms       |
 
-*AMD Ryzen 5 3550H, 3 plugins, hyperfine -r 50. See benchmark.sh*
+*AMD Ryzen 5 3550H, 3 plugins, hyperfine -r 50. See [benchmark.sh](benchmark.sh)*
 
 Rac is faster than zinit turbo.
 Rac ~200 lines
+
 Zinit ~11000 lines
 
 ## License
