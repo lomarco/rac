@@ -1,4 +1,4 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
 RAC_DEBUG=false
@@ -81,10 +81,10 @@ _rac_load() {
 
 _rac_update() {
   for dir in $RAC_CACHE/*; do
-    if [ -d "$dir/.git" ]; then
+    if [[ -d "$dir/.git" ]]; then
       branch=$(git -C "$dir" branch --show-current)
       _debug "Update $dir ($branch)"
-      git -C "$dir" pull origin "$branch"
+      git -C "$dir" pull origin "$branch" || _err "Failed to update $dir"; continue
     fi
   done
 }
@@ -106,7 +106,6 @@ Flags:
 Examples:
   rac load zsh-users/zsh-autosuggestions
   rac update --debug zdharma-continuum/fast-syntax-highlighting
-  rac update-all
   rac --debug zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting
 EOF
 }
@@ -123,7 +122,7 @@ rac() {
   local pkgs=()
   local commands=()
 
-  while [[ $i -le ${#args[@]} ]]; do
+  for arg in "${args[@]}"; do
     case "${args[$i]}" in
       load|update)
         command="${args[$i]}"
@@ -151,7 +150,7 @@ rac() {
   args=("${pkgs[@]}")
 
   [[ -z "$command" ]] && {
-    _err "Error: command required (load, update, update-all)"
+    _err "Error: command required"
     _print_help_message
     return 1
   }
