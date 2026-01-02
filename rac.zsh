@@ -111,7 +111,7 @@ EOF
 }
 
 rac() {
-  local pkgs=("$@")
+  local args=("$@")
   [[ $# -eq 0 ]] && { 
     _err "Error: arguments required"
     _print_help_message
@@ -119,13 +119,13 @@ rac() {
   }
   
   local i=1
-  local new_pkgs=()
+  local pkgs=()
   local commands=()
 
-  while [[ $i -le ${#pkgs[@]} ]]; do
-    case "${pkgs[$i]}" in
+  while [[ $i -le ${#args[@]} ]]; do
+    case "${args[$i]}" in
       load|update|update-all)
-        command="${pkgs[$i]}"
+        command="${args[$i]}"
         ((i++))
         ;;
       --debug|-d)
@@ -137,17 +137,17 @@ rac() {
         return 0
         ;;
       --*|-*)
-        _err "Unknown option: ${pkgs[$i]}"
+        _err "Unknown option: ${args[$i]}"
         return 1
         ;;
       *)
-        new_pkgs+=("${pkgs[$i]}")
+        pkgs+=("${args[$i]}")
         ((i++))
         ;;
     esac
   done
   
-  pkgs=("${new_pkgs[@]}")
+  args=("${pkgs[@]}")
 
   [[ -z "$command" ]] && {
     _err "Error: command required (load, update, update-all)"
@@ -158,8 +158,8 @@ rac() {
 
   _debug "Start $command..."
   case "$command" in
-    load) _rac_load ${pkgs[@]};;
-    update) _rac_update "${pkgs[@]}";;
-    update-all) _rac_updateall "${pkgs[@]}";;
+    load) _rac_load ${args[@]};;
+    update) _rac_update "${args[@]}";;
+    update-all) _rac_updateall "${args[@]}";;
   esac
 }
