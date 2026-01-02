@@ -80,11 +80,13 @@ _rac_load() {
 }
 
 _rac_update() {
-  # TODO: Implement rac update command
-}
-
-_rac_updateall() {
-  # TODO: Implement rac updateall command
+  for dir in $RAC_CACHE/*; do
+    if [ -d "$dir/.git" ]; then
+      branch=$(git -C "$dir" branch --show-current)
+      _debug "Update $dir ($branch)"
+      git -C "$dir" pull origin "$branch"
+    fi
+  done
 }
 
 _print_help_message() {
@@ -95,8 +97,7 @@ Usage: rac <command> [flags] [options]
 
 Commands:
   load             Load plugin
-  update           Update plugin
-  update-all       Update all plugins
+  update           Update plugins
 
 Flags:
   --help, -h       Show this help
@@ -124,7 +125,7 @@ rac() {
 
   while [[ $i -le ${#args[@]} ]]; do
     case "${args[$i]}" in
-      load|update|update-all)
+      load|update)
         command="${args[$i]}"
         ((i++))
         ;;
@@ -159,6 +160,5 @@ rac() {
   case "$command" in
     load) _rac_load ${args[@]};;
     update) _rac_update "${args[@]}";;
-    update-all) _rac_updateall "${args[@]}";;
   esac
 }
