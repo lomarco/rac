@@ -112,42 +112,37 @@ EOF
 
 rac() {
   local args=("$@")
+
   [[ $# -eq 0 ]] && { 
     _err "Error: arguments required"
     _print_help_message
     return 1 
   }
   
-  local i=1
   local pkgs=()
-  local commands=()
+  local command
 
   for arg in "${args[@]}"; do
-    case "${args[$i]}" in
+    case "${arg}" in
       load|update)
-        command="${args[$i]}"
-        ((i++))
+        command="${arg}"
         ;;
       --debug|-d)
         RAC_DEBUG=true
-        ((i++))
         ;;
       --help|-h)
         _print_help_message
         return 0
         ;;
       --*|-*)
-        _err "Unknown option: ${args[$i]}"
+        _err "Unknown option: ${arg}"
         return 1
         ;;
       *)
-        pkgs+=("${args[$i]}")
-        ((i++))
+        pkgs+=("${arg}")
         ;;
     esac
   done
-  
-  args=("${pkgs[@]}")
 
   [[ -z "$command" ]] && {
     _err "Error: command required"
@@ -157,7 +152,7 @@ rac() {
 
   _debug "Start $command..."
   case "$command" in
-    load) _rac_load ${args[@]};;
-    update) _rac_update "${args[@]}";;
+    load) _rac_load ${pkgs[@]};;
+    update) _rac_update "${pkgs[@]}";;
   esac
 }
