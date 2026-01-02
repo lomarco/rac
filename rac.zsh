@@ -84,7 +84,7 @@ _rac_update() {
     if [[ -d "$dir/.git" ]]; then
       branch=$(git -C "$dir" branch --show-current)
       _debug "Update $dir ($branch)"
-      git -C "$dir" pull origin "$branch" || _err "Failed to update $dir"; continue
+      git -C "$dir" pull origin "$branch" || _err "Failed to update $dir"
     fi
   done
 }
