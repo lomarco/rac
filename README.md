@@ -10,17 +10,12 @@ The reality is, most users never use even 80% of these features.
 
 ## Benchmarks
 
-| Manager    | Startup Time |
-|------------|--------------|
-| **rac**    | **67.8ms**   |
-| zinit-turbo| 74.5ms       |
+| Manager    | Startup Time | Lines of Code |
+|------------|--------------|---------------|
+| **rac**    | **67.8ms**   | **~200**      |
+| zinit-turbo| 74.5ms       | **~11,000**   |
 
 *AMD Ryzen 5 3550H, 3 plugins, hyperfine -r 50. See [benchmark.sh](benchmark.sh)*
-
-Rac is faster than zinit turbo.
-Rac ~200 lines
-
-Zinit ~11000 lines
 
 ## Installation
 
