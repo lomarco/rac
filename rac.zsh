@@ -152,7 +152,7 @@ rac() {
 
   _debug "Start $command..."
   case "$command" in
-    load) _rac_load ${pkgs[@]};;
+    load) _rac_load "${pkgs[@]}";;
     update) _rac_update "${pkgs[@]}";;
   esac
 }
