@@ -4,9 +4,15 @@
 
 ## About
 
+<table>
+<tr>
+<td>
 Most Zsh plugin managers are bloated. They try to do too much - dependency graphs, deferred loading, configuration injection - and in the process, they slow down your shell.
 The reality is, most users never use even 80% of these features.
 `rac` is deliberately minimal. All it does is **download plugins** and **update plugins**.
+</td>
+</tr>
+</table>
 
 ## Benchmarks
 
