@@ -31,7 +31,6 @@ source $RAC_HOME/rac.zsh
 ```bash
 rac load zsh-users/zsh-autosuggestions
 rac update
-rac pull
 ```
 
 ## Benchmarks
