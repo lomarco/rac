@@ -45,14 +45,6 @@ rac load "romkatv/powerlevel10k" \
 ```
 
 ## Benchmarks
-Rac:
-```bash
-$ hyperfine -N -w 10 -r 50 "zsh -i -c exit"
-Benchmark 1: zsh -i -c exit
-  Time (mean ± σ):      67.8 ms ±   6.3 ms    [User: 40.1 ms, System: 27.0 ms]
-  Range (min … max):    59.8 ms …  85.8 ms    50 runs
-```
-
 Zinit turbo:
 ```bash
 $ hyperfine -N -w 10 -r 50 "zsh -i -c exit"
@@ -61,12 +53,17 @@ Benchmark 1: zsh -i -c exit
   Range (min … max):    65.8 ms …  96.5 ms    50 runs
 ```
 
-## Philosophy
+Rac:
+```bash
+$ hyperfine -N -w 10 -r 50 "zsh -i -c exit"
+Benchmark 1: zsh -i -c exit
+  Time (mean ± σ):      67.8 ms ±   6.3 ms    [User: 40.1 ms, System: 27.0 ms]
+  Range (min … max):    59.8 ms …  85.8 ms    50 runs
+```
 
-> "Do less. Do it fast. Do it right."
-
-This project exists because most plugin managers forget what shell startup should feel like - *instantaneous*.  
-With `rac`, there is no magic, no hidden async loading, and no sprawling plugin syntax to remember. It respects your shell and your time.
+Rac is faster than zinit turbo.
+Rac ~200 lines
+Zinit ~11000 lines
 
 ## License
 
