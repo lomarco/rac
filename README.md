@@ -8,6 +8,20 @@ Most Zsh plugin managers are bloated. They try to do too much - dependency graph
 The reality is, most users never use even 80% of these features.
 `rac` is deliberately minimal. All it does is **download plugins** and **update plugins**.
 
+## Benchmarks
+
+| Manager    | Startup Time |
+|------------|--------------|
+| **rac**    | **67.8ms**   |
+| zinit-turbo| 74.5ms       |
+
+*AMD Ryzen 5 3550H, 3 plugins, hyperfine -r 50. See [benchmark.sh](benchmark.sh)*
+
+Rac is faster than zinit turbo.
+Rac ~200 lines
+
+Zinit ~11000 lines
+
 ## Installation
 
 Just put this in your `.zshrc` configuration:
@@ -43,20 +57,6 @@ rac load "romkatv/powerlevel10k" \
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 ```
-
-## Benchmarks
-
-| Manager    | Startup Time |
-|------------|--------------|
-| **rac**    | **67.8ms**   |
-| zinit-turbo| 74.5ms       |
-
-*AMD Ryzen 5 3550H, 3 plugins, hyperfine -r 50. See [benchmark.sh](benchmark.sh)*
-
-Rac is faster than zinit turbo.
-Rac ~200 lines
-
-Zinit ~11000 lines
 
 ## License
 
