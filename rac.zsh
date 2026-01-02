@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 typeset -gr RAC_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rac"
+typeset -gr RAC_HOME="${RAC_HOME:-$HOME/-$HOME/.local/share/rac}"
 RAC_DEBUG=false
 
 _debug() {
@@ -79,13 +80,20 @@ _rac_load() {
   done
 }
 
+
 _rac_update() {
+  local pkg=$1
+  if [[ -d "$pkg/.git" ]]; then
+    branch=$(git -C "$pkg" branch --show-current)
+    _debug "Update $pkg ($branch)"
+    git -C "$pkg" pull origin "$branch" || _err "Failed to update $pkg"
+  fi
+}
+
+_rac_update-all() {
+  _rac_update "$RAC_HOME"
   for dir in $RAC_CACHE/*; do
-    if [[ -d "$dir/.git" ]]; then
-      branch=$(git -C "$dir" branch --show-current)
-      _debug "Update $dir ($branch)"
-      git -C "$dir" pull origin "$branch" || _err "Failed to update $dir"
-    fi
+    _rac_update "$dir"
   done
 }
 
@@ -153,6 +161,6 @@ rac() {
   _debug "Start $command..."
   case "$command" in
     load) _rac_load "${pkgs[@]}";;
-    update) _rac_update "${pkgs[@]}";;
+    update) _rac_update-all "${pkgs[@]}";;
   esac
 }
