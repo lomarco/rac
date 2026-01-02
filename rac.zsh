@@ -151,8 +151,7 @@ rac() {
 
   [[ -z "$command" ]] && {
     _err "Error: command required (load, update, update-all)"
-    echo "Usage: rac <command> [flags] [packages...]"
-    echo "Try 'rac --help' for more information"
+    _print_help_message
     return 1
   }
 
