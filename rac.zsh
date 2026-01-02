@@ -87,12 +87,34 @@ _rac_updateall() {
   # TODO: Implement rac updateall command
 }
 
+_print_help_message() {
+cat << 'EOF'
+rac - rapidus addon curator
+
+Usage: rac <command> [flags] [options]
+
+Commands:
+  load             Load plugin
+  update           Update plugin
+  update-all       Update all plugins
+
+Flags:
+  --help, -h       Show this help
+  --debug, -d      Enable debug output
+
+Examples:
+  rac load zsh-users/zsh-autosuggestions
+  rac update --debug zdharma-continuum/fast-syntax-highlighting
+  rac update-all
+  rac --debug zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting
+EOF
+}
+
 rac() {
   local pkgs=("$@")
   [[ $# -eq 0 ]] && { 
     _err "Error: arguments required"
-    echo "Usage: rac [options] package1 package2..."
-    echo "Options: --debug|-d, --help|-h"
+    _print_help_message
     return 1 
   }
   
@@ -111,24 +133,7 @@ rac() {
         ((i++))
         ;;
       --help|-h)
-        echo "rac - rapidus addon curator"
-        echo ""
-        echo "Usage: rac <command> [flags] [options]"
-        echo ""
-        echo "Commands:"
-        echo "  load             Load plugin"
-        echo "  update           Update plugin"
-        echo "  update-all       Update all plugins"
-        echo ""
-        echo "Flags:"
-        echo "  --help, -h       Show this help"
-        echo "  --debug, -d      Enable debug output"
-        echo ""
-        echo "Examples:"
-        echo "  rac load zsh-users/zsh-autosuggestions"
-        echo "  rac update --debug zdharma-continuum/fast-syntax-highlighting"
-        echo "  rac update-all"
-        echo "  rac --debug zsh-users/zsh-autosuggestions zdharma-continuum/fast-syntax-highlighting"
+        _print_help_message
         return 0
         ;;
       --*|-*)
