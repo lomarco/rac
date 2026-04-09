@@ -43,10 +43,6 @@ rac update
 
 ### Zshrc example
 ```bash
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 RAC_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/rac"
 [[ -d $RAC_HOME ]] || git clone --depth 1 https://github.com/lomarco/rac.git $RAC_HOME \
   zcompile -U $RAC_HOME/rac.zsh
@@ -55,8 +51,6 @@ source $RAC_HOME/rac.zsh
 rac load "romkatv/powerlevel10k" \
   "zsh-users/zsh-autosuggestions" \
   "zdharma-continuum/fast-syntax-highlighting"
-
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 ```
 
 ## License
